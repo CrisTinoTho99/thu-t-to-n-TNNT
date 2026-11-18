@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "id": "eiffel",
+  "metadata": {
+    "name_vi": "Tháp Eiffel",
+    "name_en": "Eiffel Tower",
+    "location": "Paris, Pháp",
+    "description": "Manifest PLACEHOLDER dùng để chốt schema map.json. Gói chưa có model, texture hay nội dung map chính thức; model được tham chiếu bên dưới chưa tồn tại."
+  },
+  "model": "models/eiffel_placeholder.glb",
+  "skybox": {
+    "day": "common://skyboxes/paris_day",
+    "dusk": "common://skyboxes/paris_dusk",
+    "night": "common://skyboxes/paris_night"
+  },
+  "start_camera": {
+    "position": [0.0, 1.7, 180.0],
+    "yaw": -90.0,
+    "pitch": 5.0
+  },
+  "viewpoints": [
+    {
+      "key": 1,
+      "name_vi": "Chân tháp",
+      "position": [0.0, 1.7, 40.0],
+      "target": [0.0, 60.0, 0.0]
+    },
+    {
+      "key": 2,
+      "name_vi": "Champ de Mars",
+      "position": [0.0, 1.7, 220.0],
+      "target": [0.0, 120.0, 0.0]
+    }
+  ],
+  "tour_path": [
+    [0.0, 2.0, 200.0],
+    [120.0, 20.0, 120.0],
+    [200.0, 60.0, 0.0],
+    [0.0, 150.0, -200.0]
+  ],
+  "parts": [
+    {
+      "id": "E01",
+      "node": "E01_Pillars",
+      "name_vi": "Bốn chân trụ",
+      "description": "Bốn trụ sắt cong nâng đỡ toàn bộ tháp, đặt trên nền đá."
+    }
+  ],
+  "hotspots": [
+    {
+      "id": "eiffel_base",
+      "name_vi": "Chân tháp",
+      "position": [0.0, 1.7, 40.0],
+      "description": "Góc nhìn từ quảng trường dưới chân tháp."
+    }
+  ]
+}

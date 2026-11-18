@@ -1,0 +1,37 @@
+# Build output
+/build/
+/build-*/
+/out/
+/install/
+CMakeCache.txt
+CMakeFiles/
+CMakeUserPresets.json
+compile_commands.json
+
+# Visual Studio / VS Code
+/.vs/
+/.vscode/
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.user
+
+# Local dependency sources (FetchContent override)
+# external/ is versioned: it holds reproducible vendored dependencies (GLAD).
+
+# vcpkg (if manifest mode is adopted later)
+/vcpkg_installed/
+
+# OS / editor noise
+Thumbs.db
+Desktop.ini
+*.swp
+*~
+
+# Local portable toolchain (not part of the project)
+.tools/
+
+# Tài liệu thiết kế và docs chỉ lưu cục bộ
+/VirtualLandmarkTour_Design.md
+/docs/

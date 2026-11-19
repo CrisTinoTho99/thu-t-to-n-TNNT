@@ -17,6 +17,9 @@ public:
 
     void use() const;
     void setMat4(const char* uniformName, const glm::mat4& value) const;
+    void setMat3(const char* uniformName, const glm::mat3& value) const;
+    void setVec3(const char* uniformName, const glm::vec3& value) const;
+    void setInt(const char* uniformName, int value) const;
 
 private:
     unsigned int m_program = 0;

@@ -43,8 +43,9 @@ glm::vec3 Camera::right() const {
     return glm::normalize(glm::cross(forward(), glm::vec3(0.0f, 1.0f, 0.0f)));
 }
 
-void Camera::update(const Input& input, double deltaSeconds) {
-    if (input.isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)) {
+void Camera::update(const Input& input, double deltaSeconds,
+                    bool allowMouseLook) {
+    if (allowMouseLook && input.isMouseButtonDown(GLFW_MOUSE_BUTTON_RIGHT)) {
         if (!m_looking) {
             // Start from the current cursor position so the view does not jump.
             m_looking = true;

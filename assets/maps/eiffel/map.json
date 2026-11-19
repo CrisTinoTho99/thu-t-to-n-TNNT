@@ -11,13 +11,13 @@
   "start_camera": {
     "position": [0.0, 1.7, 320.0],
     "yaw": 0.0,
-    "pitch": 28.0
+    "pitch": 24.0
   },
   "viewpoints": [
     {
       "key": 1,
       "name_vi": "Chân tháp",
-      "position": [0.0, 1.7, 40.0],
+      "position": [0.0, 1.7, 80.0],
       "target": [0.0, 60.0, 0.0]
     },
     {

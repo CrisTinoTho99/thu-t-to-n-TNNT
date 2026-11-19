@@ -48,17 +48,22 @@ void importNode(const aiScene& scene, const aiNode& node,
         ImportedMesh mesh;
         mesh.nodeName = nodeName;
         mesh.nodeTransform = nodeTransform;
-        mesh.vertices.reserve(static_cast<std::size_t>(source.mNumVertices) * 6);
+        if (!source.HasNormals()) {
+            throw std::runtime_error("mesh in node '" + nodeName +
+                                     "' has no normals after import");
+        }
+        mesh.vertices.reserve(static_cast<std::size_t>(source.mNumVertices) * 9);
         for (unsigned int vertexIndex = 0; vertexIndex < source.mNumVertices;
              ++vertexIndex) {
             const aiVector3D& position = source.mVertices[vertexIndex];
+            const aiVector3D& normal = source.mNormals[vertexIndex];
             const aiColor4D color =
                 source.HasVertexColors(0)
                     ? source.mColors[0][vertexIndex]
                     : aiColor4D(0.72f, 0.48f, 0.22f, 1.0f);
             mesh.vertices.insert(mesh.vertices.end(),
-                                 {position.x, position.y, position.z, color.r,
-                                  color.g, color.b});
+                                 {position.x, position.y, position.z, normal.x,
+                                  normal.y, normal.z, color.r, color.g, color.b});
         }
 
         mesh.indices.reserve(static_cast<std::size_t>(source.mNumFaces) * 3);
@@ -98,6 +103,7 @@ ImportedModel loadModelAsset(const std::filesystem::path& path) {
     Assimp::Importer importer;
     const aiScene* scene = importer.ReadFile(
         path.string(), aiProcess_Triangulate | aiProcess_JoinIdenticalVertices |
+                           aiProcess_GenSmoothNormals |
                            aiProcess_ValidateDataStructure);
     if (scene == nullptr || scene->mRootNode == nullptr ||
         (scene->mFlags & AI_SCENE_FLAGS_INCOMPLETE) != 0) {

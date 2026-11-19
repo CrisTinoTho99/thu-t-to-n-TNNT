@@ -91,14 +91,41 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(assimp)
 
+# Minimal shared information UI. The OpenGL backend uses the project's GLAD
+# loader rather than a second independently embedded GL loader.
+FetchContent_Declare(
+    imgui
+    GIT_REPOSITORY https://github.com/ocornut/imgui.git
+    GIT_TAG v1.91.9b
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(imgui)
+
+add_library(vlt_imgui STATIC
+    "${imgui_SOURCE_DIR}/imgui.cpp"
+    "${imgui_SOURCE_DIR}/imgui_draw.cpp"
+    "${imgui_SOURCE_DIR}/imgui_tables.cpp"
+    "${imgui_SOURCE_DIR}/imgui_widgets.cpp"
+    "${imgui_SOURCE_DIR}/backends/imgui_impl_glfw.cpp"
+    src/ui/ImGuiOpenGL3Backend.cpp
+)
+target_include_directories(vlt_imgui PUBLIC "${imgui_SOURCE_DIR}")
+target_include_directories(vlt_imgui PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_compile_definitions(vlt_imgui PRIVATE
+    GLFW_INCLUDE_NONE
+    IMGUI_IMPL_OPENGL_LOADER_CUSTOM
+)
+target_link_libraries(vlt_imgui PUBLIC glfw glad)
+
 # ---------------------------------------------------------------------------
 # Shared world data (map manifest loader, no OpenGL dependency)
 # ---------------------------------------------------------------------------
 add_library(vlt_world STATIC
     src/world/MapLoader.cpp
+    src/world/Picking.cpp
 )
 target_include_directories(vlt_world PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(vlt_world PUBLIC nlohmann_json::nlohmann_json)
+target_link_libraries(vlt_world PUBLIC nlohmann_json::nlohmann_json glm::glm)
 
 # CPU-side model import is independent of an OpenGL context so it can be
 # validated by tests without opening a window.
@@ -121,17 +148,20 @@ set(VLT_SOURCES
     src/core/Time.cpp
     src/core/Window.cpp
     src/graphics/Camera.cpp
+    src/graphics/HotspotRenderer.cpp
     src/graphics/Model.cpp
     src/graphics/ShaderProgram.cpp
     src/graphics/TestCube.cpp
     src/scenes/MainMenuScene.cpp
     src/scenes/MapScene.cpp
+    src/ui/ImGuiLayer.cpp
 )
 
 add_executable(vlt ${VLT_SOURCES})
 
 target_include_directories(vlt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(vlt PRIVATE glfw glad glm::glm vlt_world vlt_model_assets)
+target_link_libraries(vlt PRIVATE
+    glfw glad glm::glm vlt_world vlt_model_assets vlt_imgui)
 
 # GLAD replaces the legacy GL declarations that GLFW would otherwise include.
 target_compile_definitions(vlt PRIVATE GLFW_INCLUDE_NONE)
@@ -167,3 +197,14 @@ target_link_libraries(vlt_model_tests PRIVATE vlt_model_assets vlt_world)
 
 add_test(NAME model_asset
          COMMAND vlt_model_tests "${CMAKE_CURRENT_SOURCE_DIR}/assets")
+
+add_executable(vlt_picking_tests tests/picking_tests.cpp)
+target_link_libraries(vlt_picking_tests PRIVATE vlt_world)
+
+add_test(NAME picking COMMAND vlt_picking_tests)
+
+add_executable(vlt_input_tests tests/input_tests.cpp src/core/Input.cpp)
+target_include_directories(vlt_input_tests PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_link_libraries(vlt_input_tests PRIVATE glfw)
+
+add_test(NAME input_state COMMAND vlt_input_tests)

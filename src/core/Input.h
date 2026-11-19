@@ -21,6 +21,7 @@ public:
     bool wasKeyReleased(int key) const;
 
     bool isMouseButtonDown(int button) const;
+    bool wasMouseButtonPressed(int button) const;
 
     double mouseX() const { return m_mouseX; }
     double mouseY() const { return m_mouseY; }
@@ -39,6 +40,7 @@ private:
     std::array<bool, kKeyCount> m_keysReleased{};
 
     std::array<bool, kMouseButtonCount> m_mouseDown{};
+    std::array<bool, kMouseButtonCount> m_mousePressed{};
 
     double m_mouseX = 0.0;
     double m_mouseY = 0.0;

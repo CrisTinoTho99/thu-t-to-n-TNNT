@@ -23,7 +23,12 @@ void Input::onMouseButton(int button, int action) {
     if (!isValidIndex(button, kMouseButtonCount)) {
         return;
     }
-    m_mouseDown[button] = (action == GLFW_PRESS);
+    if (action == GLFW_PRESS) {
+        m_mouseDown[button] = true;
+        m_mousePressed[button] = true;
+    } else if (action == GLFW_RELEASE) {
+        m_mouseDown[button] = false;
+    }
 }
 
 void Input::onCursorPos(double x, double y) {
@@ -51,9 +56,14 @@ bool Input::isMouseButtonDown(int button) const {
     return isValidIndex(button, kMouseButtonCount) && m_mouseDown[button];
 }
 
+bool Input::wasMouseButtonPressed(int button) const {
+    return isValidIndex(button, kMouseButtonCount) && m_mousePressed[button];
+}
+
 void Input::endFrame() {
     m_keysPressed.fill(false);
     m_keysReleased.fill(false);
+    m_mousePressed.fill(false);
     m_scrollDelta = 0.0;
 }
 

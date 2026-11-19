@@ -1,7 +1,9 @@
 #pragma once
 
+#include <cstddef>
 #include <filesystem>
 #include <memory>
+#include <optional>
 #include <string>
 
 #include "graphics/Camera.h"
@@ -11,6 +13,8 @@
 namespace vlt {
 
 class Input;
+class HotspotRenderer;
+class ImGuiLayer;
 class Model;
 class SceneManager;
 class ShaderProgram;
@@ -30,8 +34,11 @@ public:
     void onUnload() override;
     void update(double deltaSeconds, const Input& input) override;
     void render() override;
+    void renderUI() override;
 
 private:
+    void pickFromCursor(const Input& input);
+
     SceneManager& m_sceneManager;
     std::string m_mapId;
     std::filesystem::path m_assetRoot;
@@ -41,7 +48,11 @@ private:
 
     std::unique_ptr<ShaderProgram> m_shader;
     std::unique_ptr<Model> m_model;
+    std::unique_ptr<HotspotRenderer> m_hotspotRenderer;
+    std::unique_ptr<ImGuiLayer> m_ui;
     Camera m_camera;
+    std::optional<std::size_t> m_selectedPartIndex;
+    std::optional<std::size_t> m_selectedHotspotIndex;
 };
 
 }  // namespace vlt

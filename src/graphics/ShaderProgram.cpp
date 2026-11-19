@@ -104,4 +104,33 @@ void ShaderProgram::setMat4(const char* uniformName,
     glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
+void ShaderProgram::setMat3(const char* uniformName,
+                            const glm::mat3& value) const {
+    const int location = glGetUniformLocation(m_program, uniformName);
+    if (location < 0) {
+        VLT_LOG_WARN("Shader uniform '%s' not found.", uniformName);
+        return;
+    }
+    glUniformMatrix3fv(location, 1, GL_FALSE, glm::value_ptr(value));
+}
+
+void ShaderProgram::setVec3(const char* uniformName,
+                            const glm::vec3& value) const {
+    const int location = glGetUniformLocation(m_program, uniformName);
+    if (location < 0) {
+        VLT_LOG_WARN("Shader uniform '%s' not found.", uniformName);
+        return;
+    }
+    glUniform3fv(location, 1, glm::value_ptr(value));
+}
+
+void ShaderProgram::setInt(const char* uniformName, int value) const {
+    const int location = glGetUniformLocation(m_program, uniformName);
+    if (location < 0) {
+        VLT_LOG_WARN("Shader uniform '%s' not found.", uniformName);
+        return;
+    }
+    glUniform1i(location, value);
+}
+
 }  // namespace vlt

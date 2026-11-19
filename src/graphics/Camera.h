@@ -21,7 +21,8 @@ public:
 
     // WASD moves along the view direction, Q/E moves vertically; holding the
     // right mouse button and moving the mouse looks around.
-    void update(const Input& input, double deltaSeconds);
+    void update(const Input& input, double deltaSeconds,
+                bool allowMouseLook = true);
 
     glm::mat4 viewMatrix() const;
     glm::mat4 projectionMatrix() const;

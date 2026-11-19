@@ -116,12 +116,12 @@ int main(int argc, char** argv) {
     std::filesystem::remove_all(g_root, error);
     std::filesystem::create_directories(g_root);
 
-    // 1. The real placeholder manifest is valid.
+    // 1. The real Eiffel blockout manifest is valid.
     {
         vlt::MapLoadResult result = vlt::loadMapManifest(
             g_assetRoot / "maps" / "eiffel" / "map.json", g_assetRoot,
             "eiffel");
-        check(result.ok, "eiffel placeholder manifest is valid", result.errors);
+        check(result.ok, "eiffel blockout manifest is valid", result.errors);
         check(result.data.metadata.nameEn == "Eiffel Tower",
               "eiffel metadata parsed", result.errors);
         check(result.data.viewpoints.size() == 2, "eiffel viewpoints parsed",

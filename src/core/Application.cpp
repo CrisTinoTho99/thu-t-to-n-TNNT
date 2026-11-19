@@ -14,7 +14,7 @@ namespace vlt {
 namespace {
 constexpr int kWindowWidth = 1280;
 constexpr int kWindowHeight = 720;
-const char* kBaseTitle = "VirtualLandmarkTour - platform skeleton";
+const char* kBaseTitle = "VirtualLandmarkTour";
 }  // namespace
 
 Application::Application(int argc, char** argv)

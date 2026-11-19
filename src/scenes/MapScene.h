@@ -11,13 +11,13 @@
 namespace vlt {
 
 class Input;
+class Model;
 class SceneManager;
 class ShaderProgram;
-class TestCube;
 
 // Shared scene for every map package. It loads the package manifest, reports
-// schema errors with the map id and JSON pointer, and renders placeholder test
-// geometry with a fly camera. Model/GLB loading is not implemented yet.
+// schema errors with the map id and JSON pointer, imports the package model,
+// and renders it with the shared fly camera.
 class MapScene : public IScene {
 public:
     MapScene(std::string mapId, std::filesystem::path assetRoot,
@@ -40,7 +40,7 @@ private:
     MapData m_mapData;
 
     std::unique_ptr<ShaderProgram> m_shader;
-    std::unique_ptr<TestCube> m_cube;
+    std::unique_ptr<Model> m_model;
     Camera m_camera;
 };
 

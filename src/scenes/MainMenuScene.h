@@ -9,9 +9,8 @@ namespace vlt {
 class Input;
 class SceneManager;
 
-// Placeholder menu for the platform skeleton: no ImGui cards yet, only keyboard
-// shortcuts and a solid background. Map 1 opens the placeholder Eiffel
-// manifest; maps 2 and 3 report that their packages do not exist yet.
+// Placeholder menu: no ImGui cards yet, only keyboard shortcuts and a solid
+// background. Map 1 opens the Eiffel blockout; maps 2 and 3 are not available.
 class MainMenuScene : public IScene {
 public:
     MainMenuScene(SceneManager& sceneManager,

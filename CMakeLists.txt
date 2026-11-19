@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.20)
+cmake_minimum_required(VERSION 3.22)
 
 project(VirtualLandmarkTour
     VERSION 0.1.0
@@ -24,11 +24,9 @@ endforeach()
 # ---------------------------------------------------------------------------
 # Dependencies
 #
-# GLFW is the only third-party dependency of the current platform skeleton.
-# See docs/BUILD.md for why GLAD, GLM, Assimp, stb and Dear ImGui are deferred
-# until the feature that first needs them is implemented. GLFW is pinned to a
-# released tag and fetched at configure time; to build offline, point CMake at
-# an existing checkout with -DFETCHCONTENT_SOURCE_DIR_GLFW=<path>.
+# See docs/BUILD.md for dependency versions and reasons. Runtime dependencies
+# are pinned and fetched at configure time; to build offline, point CMake at
+# existing checkouts with FETCHCONTENT_SOURCE_DIR_<NAME>.
 # ---------------------------------------------------------------------------
 include(FetchContent)
 
@@ -69,6 +67,30 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(nlohmann_json)
 
+# Assimp is built with only the glTF importer enabled to keep the shared model
+# loader focused and reduce build time for contributors.
+set(ASSIMP_BUILD_TESTS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ASSIMP_TOOLS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_SAMPLES OFF CACHE BOOL "" FORCE)
+set(ASSIMP_INSTALL OFF CACHE BOOL "" FORCE)
+set(ASSIMP_NO_EXPORT ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_IMPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_GLTF_IMPORTER ON CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ALL_EXPORTERS_BY_DEFAULT OFF CACHE BOOL "" FORCE)
+set(ASSIMP_WARNINGS_AS_ERRORS OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_USE_CCACHE OFF CACHE BOOL "" FORCE)
+set(ASSIMP_BUILD_ZLIB ON CACHE BOOL "" FORCE)
+set(ASSIMP_IGNORE_GIT_HASH ON CACHE BOOL "" FORCE)
+set(BUILD_SHARED_LIBS OFF CACHE BOOL "" FORCE)
+
+FetchContent_Declare(
+    assimp
+    GIT_REPOSITORY https://github.com/assimp/assimp.git
+    GIT_TAG v5.4.3
+    GIT_SHALLOW TRUE
+)
+FetchContent_MakeAvailable(assimp)
+
 # ---------------------------------------------------------------------------
 # Shared world data (map manifest loader, no OpenGL dependency)
 # ---------------------------------------------------------------------------
@@ -77,6 +99,14 @@ add_library(vlt_world STATIC
 )
 target_include_directories(vlt_world PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
 target_link_libraries(vlt_world PUBLIC nlohmann_json::nlohmann_json)
+
+# CPU-side model import is independent of an OpenGL context so it can be
+# validated by tests without opening a window.
+add_library(vlt_model_assets STATIC
+    src/graphics/ModelAsset.cpp
+)
+target_include_directories(vlt_model_assets PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_link_libraries(vlt_model_assets PUBLIC assimp glm::glm)
 
 # ---------------------------------------------------------------------------
 # Application target
@@ -91,6 +121,7 @@ set(VLT_SOURCES
     src/core/Time.cpp
     src/core/Window.cpp
     src/graphics/Camera.cpp
+    src/graphics/Model.cpp
     src/graphics/ShaderProgram.cpp
     src/graphics/TestCube.cpp
     src/scenes/MainMenuScene.cpp
@@ -100,7 +131,7 @@ set(VLT_SOURCES
 add_executable(vlt ${VLT_SOURCES})
 
 target_include_directories(vlt PRIVATE "${CMAKE_CURRENT_SOURCE_DIR}/src")
-target_link_libraries(vlt PRIVATE glfw glad glm::glm vlt_world)
+target_link_libraries(vlt PRIVATE glfw glad glm::glm vlt_world vlt_model_assets)
 
 # GLAD replaces the legacy GL declarations that GLFW would otherwise include.
 target_compile_definitions(vlt PRIVATE GLFW_INCLUDE_NONE)
@@ -130,3 +161,9 @@ target_link_libraries(vlt_map_tests PRIVATE vlt_world)
 
 add_test(NAME map_loader
          COMMAND vlt_map_tests "${CMAKE_CURRENT_SOURCE_DIR}/assets")
+
+add_executable(vlt_model_tests tests/model_asset_tests.cpp)
+target_link_libraries(vlt_model_tests PRIVATE vlt_model_assets vlt_world)
+
+add_test(NAME model_asset
+         COMMAND vlt_model_tests "${CMAKE_CURRENT_SOURCE_DIR}/assets")

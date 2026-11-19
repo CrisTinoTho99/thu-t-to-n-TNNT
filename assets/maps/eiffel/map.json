@@ -5,18 +5,13 @@
     "name_vi": "Tháp Eiffel",
     "name_en": "Eiffel Tower",
     "location": "Paris, Pháp",
-    "description": "Manifest PLACEHOLDER dùng để chốt schema map.json. Gói chưa có model, texture hay nội dung map chính thức; model được tham chiếu bên dưới chưa tồn tại."
+    "description": "Blockout hình học đơn giản để kiểm chứng pipeline GLB và node; không phải mô hình Eiffel hoàn thiện."
   },
-  "model": "models/eiffel_placeholder.glb",
-  "skybox": {
-    "day": "common://skyboxes/paris_day",
-    "dusk": "common://skyboxes/paris_dusk",
-    "night": "common://skyboxes/paris_night"
-  },
+  "model": "models/eiffel_blockout.glb",
   "start_camera": {
-    "position": [0.0, 1.7, 180.0],
-    "yaw": -90.0,
-    "pitch": 5.0
+    "position": [0.0, 1.7, 320.0],
+    "yaw": 0.0,
+    "pitch": 28.0
   },
   "viewpoints": [
     {
@@ -44,6 +39,24 @@
       "node": "E01_Pillars",
       "name_vi": "Bốn chân trụ",
       "description": "Bốn trụ sắt cong nâng đỡ toàn bộ tháp, đặt trên nền đá."
+    },
+    {
+      "id": "E02",
+      "node": "E02_CrossBracing",
+      "name_vi": "Kết cấu giằng",
+      "description": "Các thanh giằng chéo mô phỏng khung kết cấu của tháp."
+    },
+    {
+      "id": "E03",
+      "node": "E03_Platforms",
+      "name_vi": "Các tầng quan sát",
+      "description": "Các mặt sàn đơn giản đánh dấu những tầng chính."
+    },
+    {
+      "id": "E07",
+      "node": "E07_Antenna",
+      "name_vi": "Đỉnh tháp",
+      "description": "Mast và tầng trên cùng trong mô hình blockout."
     }
   ],
   "hotspots": [

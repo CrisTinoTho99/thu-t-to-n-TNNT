@@ -9,9 +9,8 @@
 namespace vlt {
 
 struct MapLoadOptions {
-    // The manifest milestone validates paths syntactically only, because the
-    // Eiffel package has no GLB yet. Asset-resolution code can enable this to
-    // require the referenced files to exist.
+    // Validate that referenced model files exist when the caller is ready to
+    // load package assets.
     bool verifyAssetFiles = false;
 };
 
@@ -32,7 +31,7 @@ MapLoadResult loadMapManifest(const std::filesystem::path& manifestPath,
 
 // Resolves a manifest reference: relative to the map package, or `common://`
 // relative to assets/common/. Returns an empty path when the reference is
-// invalid. Callers normally do not need this before the asset pipeline exists.
+// invalid.
 std::filesystem::path resolveMapAsset(const std::filesystem::path& assetRoot,
                                       const std::string& mapId,
                                       const std::string& reference);

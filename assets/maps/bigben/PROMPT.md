@@ -1,0 +1,13 @@
+# Prompt dựng Tháp Elizabeth và đồng hồ Big Ben
+
+Dựng một map 3D cho dự án Virtual Landmark Tour bằng cách tái hiện ngoại thất Tháp Elizabeth tại Cung điện Westminster, London, theo diện mạo sau trùng tu. Big Ben là quả chuông lớn nằm trong tháp. Bàn giao mô hình GLB có thể quan sát từ cả bốn phía và chọn từng bộ phận trong ứng dụng. Làm việc trong `assets/maps/bigben/`.
+
+**Khối kiến trúc.** Dùng chiều cao khoảng 96 m và đường kính mặt đồng hồ 7 m làm hai mốc để dựng hình. Dùng ảnh toàn tháp để xác định cao độ các tầng. Từ dưới lên phải đọc được thân đá với các dải cửa sổ đứng, tầng mặt số, tầng chuông với các ô thoáng, mái dốc sẫm màu và chóp nhọn. Dựng các gờ đá, vòm nhọn và trụ góc có chiều sâu để đường viền Gothic hiện rõ khi nhìn chéo. Đá có sắc kem ấm, hốc cửa và khe giữa gờ chỉ tối hơn nhẹ.
+
+**Bốn mặt đồng hồ.** Đặt một mặt tròn ở mỗi phía của thân tháp vuông. Dựng nền kính trắng sữa phân ô, khung gang và bộ kim màu xanh Phổ, chi tiết thếp vàng tại các góc. Sao hình ký tự giờ Gothic theo ảnh cận cảnh của Quốc hội Anh, chú ý hình dạng ký tự chỉ số mười. Dựng kim thành hình học nổi phía trước mặt kính. Cho cả bốn mặt cùng chỉ 10 giờ 10 phút, với kim giờ hơi vượt qua mốc 10. Xoay từng mặt quanh trục đứng để các ký tự đều đọc đúng từ bên ngoài. Bố trí camera mở đầu theo góc nhìn chéo từ phía cầu Westminster, thấy trọn chóp và hai mặt đồng hồ. Thêm một góc ngang tầm mặt số để quan sát bộ kim, khung và các ô kính.
+
+**Tích hợp.** Xuất `models/bigben.glb`, dùng mét, trục Y hướng lên và hướng trước là -Z. Xuất pháp tuyến và màu đỉnh `COLOR_0` cho đá, kính, khung, kim và chi tiết vàng. Tạo các node có mesh riêng như `B01_Tower`, `B02_DialNorth`, `B03_DialEast`, `B04_DialSouth`, `B05_DialWest`, `B06_Belfry`, `B07_Spire`. Tạo `map.json` theo cấu trúc của map Eiffel với `id` là `bigben`, mô tả tiếng Việt, camera, điểm quan sát, đường tham quan và hotspot. Mỗi `parts[].node` phải khớp chính xác một node có mesh trong GLB. Ghi nguồn và giấy phép của tài sản bên ngoài vào `SOURCES.md`.
+
+**Kiểm tra.** Mở map bằng phím 3 trong menu. Đi vòng quanh tháp để kiểm tra đủ bốn mặt số, cùng giờ, đúng chiều và bộ kim tách rõ khỏi kính. Thử chọn hai mặt đồng hồ liền kề để xác nhận ứng dụng nhận đúng từng mặt.
+
+Tư liệu đối chiếu: [kích thước tháp và đồng hồ – UK Parliament](https://www.parliament.uk/about/living-heritage/building/palace/big-ben/facts-figures/), [ảnh màu mặt đồng hồ sau trùng tu – UK Parliament](https://www.parliament.uk/mps-lords-and-offices/offices/commons/media-relations-group/news/north-dial-of-the-elizabeth-tower-revealed/), [tham quan ảo và chi tiết mặt số – UK Parliament](https://virtualtours-assets.parliament.uk/elizabeth-tower/index.html).

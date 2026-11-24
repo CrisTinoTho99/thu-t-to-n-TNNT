@@ -257,7 +257,7 @@ void renderView(int w, int h, const vec3& eye, const vec3& fwd, float fovY,
     }
 }
 
-int run(const fs::path& package, const fs::path& captures) {
+int run(const fs::path& package, const fs::path& captures, bool benchmark) {
     MapLoadOptions options;
     options.verifyAssetFiles = true;
     auto result = loadMapManifest(package / "map.json", package.parent_path().parent_path(), "hoian", options);
@@ -371,6 +371,9 @@ int run(const fs::path& package, const fs::path& captures) {
     walker.jump(map.viewpoints.at(0));
     int viewKey = map.viewpoints.at(0).key;
     double prev = glfwGetTime();
+    int measuredFrames = -45;
+    double measurementStart = 0;
+    if (benchmark) glfwSwapInterval(0);
 
     while (!window.shouldClose()) {
         window.pollEvents();
@@ -397,6 +400,18 @@ int run(const fs::path& package, const fs::path& captures) {
 
         window.swapBuffers();
         input.endFrame();
+        if (benchmark) {
+            ++measuredFrames;
+            if (measuredFrames == 0) {
+                glFinish();
+                measurementStart = glfwGetTime();
+            } else if (measuredFrames == 180) {
+                glFinish();
+                std::cout << w << 'x' << h << " view " << viewKey << " FPS "
+                          << measuredFrames / (glfwGetTime() - measurementStart) << '\n';
+                break;
+            }
+        }
     }
     glDeleteVertexArrays(1, &skyVAO);
     return 0;
@@ -407,7 +422,8 @@ int main(int argc, char** argv) {
         fs::path package = argc > 1 ? fs::absolute(argv[1]) : fs::current_path();
         if (argc == 1 && !fs::exists(package / "map.json"))
             package = fs::absolute(argv[0]).parent_path().parent_path().parent_path() / "assets/maps/hoian";
-        return run(package, argc == 4 && std::string(argv[2]) == "--capture" ? fs::absolute(argv[3]) : fs::path{});
+        return run(package, argc == 4 && std::string(argv[2]) == "--capture" ? fs::absolute(argv[3]) : fs::path{},
+                   argc == 3 && std::string(argv[2]) == "--benchmark");
     } catch (const std::exception& e) {
         std::cerr << e.what() << '\n';
         return 1;
